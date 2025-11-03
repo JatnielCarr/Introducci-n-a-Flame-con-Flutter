@@ -25,7 +25,7 @@ class _SaveScoreDialogState extends State<SaveScoreDialog> {
     final name = _nameController.text.trim();
     if (name.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter your name')),
+        const SnackBar(content: Text('Por favor ingresa tu nombre')),
       );
       return;
     }
@@ -42,7 +42,7 @@ class _SaveScoreDialogState extends State<SaveScoreDialog> {
         Navigator.of(context).pop(true);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Score saved successfully!'),
+            content: Text('¡Puntuación guardada exitosamente!'),
             backgroundColor: Colors.green,
           ),
         );
@@ -50,7 +50,7 @@ class _SaveScoreDialogState extends State<SaveScoreDialog> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error saving score: $e')),
+          SnackBar(content: Text('Error guardando puntuación: $e')),
         );
       }
     } finally {
@@ -60,26 +60,48 @@ class _SaveScoreDialogState extends State<SaveScoreDialog> {
     }
   }
 
+  Future<void> _skipAndSaveAnonymous() async {
+    setState(() => _isSaving = true);
+
+    try {
+      print('💾 Guardando puntuación anónima: ${widget.score}');
+      await SupabaseService.saveScore(
+        playerName: 'Jugador',
+        score: widget.score,
+      );
+      print('✅ Puntuación guardada anónimamente');
+
+      if (mounted) {
+        Navigator.of(context).pop(false);
+      }
+    } catch (e) {
+      print('❌ Error guardando anónimamente: $e');
+      if (mounted) {
+        Navigator.of(context).pop(false);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(
-        'New High Score!',
+        'Guardar Puntuación',
         style: Theme.of(context).textTheme.headlineSmall,
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            'Score: ${widget.score}',
+            'Puntos: ${widget.score}',
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 16),
           TextField(
             controller: _nameController,
             decoration: const InputDecoration(
-              labelText: 'Your Name',
-              hintText: 'Enter your name',
+              labelText: 'Tu Nombre',
+              hintText: 'Ingresa tu nombre',
               border: OutlineInputBorder(),
             ),
             maxLength: 20,
@@ -90,8 +112,8 @@ class _SaveScoreDialogState extends State<SaveScoreDialog> {
       ),
       actions: [
         TextButton(
-          onPressed: _isSaving ? null : () => Navigator.of(context).pop(false),
-          child: const Text('SKIP'),
+          onPressed: _isSaving ? null : _skipAndSaveAnonymous,
+          child: const Text('SALTAR'),
         ),
         ElevatedButton(
           onPressed: _isSaving ? null : _saveScore,
@@ -101,7 +123,7 @@ class _SaveScoreDialogState extends State<SaveScoreDialog> {
                   height: 20,
                   child: CircularProgressIndicator(strokeWidth: 2),
                 )
-              : const Text('SAVE'),
+              : const Text('GUARDAR'),
         ),
       ],
     );

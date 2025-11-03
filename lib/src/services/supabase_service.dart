@@ -21,12 +21,14 @@ class SupabaseService {
     required int score,
   }) async {
     try {
+      print('💾 Guardando puntuación: $playerName - $score puntos');
       await client.from('scores').insert({
         'player_name': playerName,
         'score': score,
       });
+      print('✅ Puntuación guardada exitosamente');
     } catch (e) {
-      print('Error al guardar puntuación: $e');
+      print('❌ Error al guardar puntuación: $e');
       rethrow;
     }
   }
@@ -34,6 +36,7 @@ class SupabaseService {
   /// Obtener top 10 puntuaciones
   static Future<List<Map<String, dynamic>>> getTopScores() async {
     try {
+      print('📊 Obteniendo top 10 puntuaciones...');
       final response = await client
           .from('scores')
           .select('player_name, score, created_at')
@@ -41,9 +44,10 @@ class SupabaseService {
           .order('created_at', ascending: false)
           .limit(10);
 
+      print('✅ Top scores obtenidos: ${response.length} registros');
       return List<Map<String, dynamic>>.from(response);
     } catch (e) {
-      print('Error al obtener puntuaciones: $e');
+      print('❌ Error al obtener puntuaciones: $e');
       return [];
     }
   }
@@ -67,13 +71,23 @@ class SupabaseService {
   /// Verificar si una puntuación está en el top 10
   static Future<bool> isTopScore(int score) async {
     try {
+      print('🔍 Verificando si $score es top score...');
       final topScores = await getTopScores();
-      if (topScores.length < 10) return true;
+      
+      if (topScores.length < 10) {
+        print('✅ Hay menos de 10 scores, cualifica automáticamente');
+        return true;
+      }
+      
       final lowestTopScore = topScores.last['score'] as int;
-      return score > lowestTopScore;
+      final qualifies = score >= lowestTopScore;
+      print('📈 Score más bajo del top 10: $lowestTopScore');
+      print('${qualifies ? "✅" : "❌"} ¿Cualifica? $qualifies');
+      return qualifies;
     } catch (e) {
-      print('Error al verificar si es top score: $e');
-      return false;
+      print('❌ Error al verificar si es top score: $e');
+      // En caso de error, asumir que sí cualifica para mostrar el diálogo
+      return true;
     }
   }
 }

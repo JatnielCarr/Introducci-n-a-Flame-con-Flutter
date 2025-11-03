@@ -23,9 +23,10 @@ Re-implementación del clásico juego Breakout de Steve Wozniak, con gráficos m
 ### 🏆 Sistema de Puntuación
 - ✅ Puntuación en tiempo real
 - ✅ Cada ladrillo = 1 punto (máximo 50)
-- ✅ Guardado automático de high scores
+- ✅ **Guardado AUTOMÁTICO** de todas las partidas
+- ✅ Opción para guardar con tu nombre o anónimo
 - ✅ Tabla de clasificación Top 10
-- ✅ Verificación automática de récords
+- ✅ Todas las puntuaciones se guardan en Supabase
 
 ### 🎨 Interfaz de Usuario
 - ✅ Pantalla de bienvenida animada
@@ -34,6 +35,12 @@ Re-implementación del clásico juego Breakout de Steve Wozniak, con gráficos m
 - ✅ Leaderboard con medallas (🥇🥈🥉)
 - ✅ Fuente retro estilo arcade
 - ✅ Diseño responsivo multi-plataforma
+
+### 🎵 Audio y Música
+- ✅ Música de fondo retro en loop
+- ✅ Sonido de Game Over
+- ✅ Control automático de volumen
+- ✅ Reproducción sin interrupciones
 
 ### ☁️ Integración con Supabase
 - ✅ Backend en la nube
@@ -123,6 +130,17 @@ flutter pub get
 flutter run
 ```
 
+### ⚠️ **IMPORTANTE - Requisitos para Guardar Puntuaciones:**
+
+Para que las puntuaciones se guarden en Supabase, tu dispositivo móvil **DEBE tener conexión a internet activa**:
+
+1. **Activa WiFi** o **Datos móviles** en tu celular
+2. Verifica que tengas conexión antes de jugar
+3. Si ves el mensaje "Sin conexión a internet", las puntuaciones NO se guardarán
+4. Con internet activo, verás "¡Puntuación guardada: X puntos!"
+
+**Nota**: El juego funciona sin internet, pero las puntuaciones solo se guardan localmente en la sesión actual.
+
 ## 📁 Estructura del Proyecto
 
 ```
@@ -137,8 +155,9 @@ lib/
     │   ├── brick.dart                 # Ladrillos
     │   ├── play_area.dart             # Área de juego
     │   └── components.dart            # Exportaciones
-    ├── services/                      # 🆕 Servicios
-    │   └── supabase_service.dart      # Cliente Supabase
+    ├── services/                      # Servicios
+    │   ├── supabase_service.dart      # Cliente Supabase
+    │   └── audio_service.dart         # 🎵 Servicio de audio
     └── widgets/                       # Widgets Flutter
         ├── game_app.dart              # App principal
         ├── score_card.dart            # Tarjeta de puntuación
@@ -153,6 +172,7 @@ lib/
 |------------|---------|-----------|
 | [Flutter](https://flutter.dev) | 3.8.0 | Framework de UI multiplataforma |
 | [Flame](https://flame-engine.org) | 1.28.1 | Motor de juegos 2D |
+| [Flame Audio](https://pub.dev/packages/flame_audio) | 2.1.0 | Sistema de audio para juegos |
 | [Supabase Flutter](https://supabase.com/docs/reference/dart) | 2.8.0 | Backend como servicio (BaaS) |
 | [Google Fonts](https://pub.dev/packages/google_fonts) | 6.2.1 | Fuente Press Start 2P (retro) |
 | [Flutter Animate](https://pub.dev/packages/flutter_animate) | 4.5.2 | Animaciones declarativas |
@@ -165,8 +185,10 @@ lib/
 4. **Puntuación**: Cada ladrillo roto suma 1 punto
 5. **Victoria**: Destruye todos los ladrillos
 6. **Derrota**: Si la pelota cae por debajo del bate
-7. **High Score**: Si logras Top 10, ingresa tu nombre
+7. **Guardado**: Al terminar, ingresa tu nombre o presiona SALTAR para guardar anónimamente
 8. **Leaderboard**: Presiona `L` para ver la tabla de clasificación
+
+**IMPORTANTE**: Cada partida se guarda automáticamente en Supabase, sin importar tu puntuación.
 
 ## 🏆 Sistema de Puntuación
 

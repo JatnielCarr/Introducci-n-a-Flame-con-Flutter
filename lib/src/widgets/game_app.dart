@@ -4,10 +4,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../brick_breaker.dart';
 import '../config.dart';
+import '../services/audio_service.dart';
 import '../services/supabase_service.dart';
 import 'leaderboard_screen.dart';
 import 'overlay_screen.dart';
-import 'save_score_dialog.dart';
 import 'score_card.dart';
 
 class GameApp extends StatefulWidget {
@@ -24,28 +24,81 @@ class _GameAppState extends State<GameApp> {
   void initState() {
     super.initState();
     game = BrickBreaker();
-    _initSupabase();
+    _initServices();
+  }
+
+  Future<void> _initServices() async {
+    await _initSupabase();
+    await _initAudio();
   }
 
   Future<void> _initSupabase() async {
     try {
+      print('🔄 Inicializando Supabase...');
       await SupabaseService.initialize();
+      print('✅ Supabase inicializado correctamente');
     } catch (e) {
-      print('Error inicializando Supabase: $e');
+      print('❌ Error inicializando Supabase: $e');
+    }
+  }
+
+  Future<void> _initAudio() async {
+    try {
+      await AudioService.initialize();
+      await AudioService.playBackgroundMusic();
+    } catch (e) {
+      print('❌ Error inicializando audio: $e');
     }
   }
 
   Future<void> _checkAndSaveScore(int score) async {
-    if (score == 0) return;
+    print('🎯 Guardando puntuación: $score');
+    
+    if (!mounted) return;
 
-    final isTopScore = await SupabaseService.isTopScore(score);
-    if (isTopScore && mounted) {
-      await showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => SaveScoreDialog(score: score),
+    try {
+      // Intentar guardar en Supabase
+      print('💾 Intentando guardar en Supabase...');
+      await SupabaseService.saveScore(
+        playerName: 'Jugador',
+        score: score,
       );
+      print('✅ Puntuación guardada en Supabase');
+      
+      // Mostrar confirmación
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('¡Puntuación guardada: $score puntos!'),
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      print('❌ Error guardando score: $e');
+      
+      // Si hay error de conexión, informar al usuario
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Sin conexión a internet. Puntuación: $score'),
+            backgroundColor: Colors.orange,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
     }
+  }
+
+  void _onGameOver() {
+    AudioService.playGameOver();
+  }
+
+  @override
+  void dispose() {
+    AudioService.dispose();
+    super.dispose();
   }
 
   void _showLeaderboard() {
@@ -108,6 +161,7 @@ class _GameAppState extends State<GameApp> {
                                       ),
                                   PlayState.gameOver.name: (context, game) {
                                     WidgetsBinding.instance.addPostFrameCallback((_) {
+                                      _onGameOver();
                                       _checkAndSaveScore((game as BrickBreaker).score.value);
                                     });
                                     return const OverlayScreen(

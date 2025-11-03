@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   flame: ^1.28.1
+  flame_audio: ^2.1.0
   flutter_animate: ^4.5.2
   google_fonts: ^6.2.1
   supabase_flutter: ^2.8.0
@@ -26,6 +27,7 @@ flutter:
   
   assets:
     - assets/images/
+    - assets/audio/
 
 # Configuración del icono de la app
 flutter_launcher_icons:
