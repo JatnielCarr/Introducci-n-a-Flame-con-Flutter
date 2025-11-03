@@ -27,7 +27,9 @@ migrate_working_dir/
 **/doc/api/
 **/ios/Flutter/.last_build_id
 .dart_tool/
+.flutter-plugins
 .flutter-plugins-dependencies
+.packages
 .pub-cache/
 .pub/
 /build/
@@ -43,6 +45,22 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Generated files - Flutter Launcher Icons
+android/app/src/main/res/mipmap-*/*.png
+ios/Runner/Assets.xcassets/AppIcon.appiconset/*.png
+web/icons/*.png
+web/favicon.png
+windows/runner/resources/app_icon.ico
+macos/Runner/Assets.xcassets/AppIcon.appiconset/*.png
+
+# Generated files - Flutter Native Splash
+android/app/src/main/res/drawable*/launch_background.xml
+android/app/src/main/res/drawable*/splash.png
+ios/Runner/Assets.xcassets/LaunchImage.imageset/*.png
+ios/Runner/Base.lproj/LaunchScreen.storyboard
+web/splash/
+web/splash.js
 
 # Supabase - IMPORTANT: Never commit API keys or secrets
 # If you need to share keys, use environment variables

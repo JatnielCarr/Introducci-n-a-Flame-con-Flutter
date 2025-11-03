@@ -19,7 +19,7 @@ class LeaderboardScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'TOP SCORES',
+                'TOP 10 SCORES',
                 style: Theme.of(context).textTheme.headlineMedium,
               ).animate().slideY(duration: 500.ms, begin: -2, end: 0),
               const SizedBox(height: 16),

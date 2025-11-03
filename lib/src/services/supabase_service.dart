@@ -15,7 +15,7 @@ class SupabaseService {
     );
   }
 
-  /// Guardar puntuación
+  /// Guardar puntuación de la partida
   static Future<void> saveScore({
     required String playerName,
     required int score,
@@ -38,7 +38,7 @@ class SupabaseService {
           .from('scores')
           .select('player_name, score, created_at')
           .order('score', ascending: false)
-          .order('created_at', ascending: true)
+          .order('created_at', ascending: false)
           .limit(10);
 
       return List<Map<String, dynamic>>.from(response);

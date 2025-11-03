@@ -39,9 +39,12 @@ class _SaveScoreDialogState extends State<SaveScoreDialog> {
       );
 
       if (mounted) {
-        Navigator.of(context).pop(true); // Retorna true si se guardó
+        Navigator.of(context).pop(true);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Score saved successfully!')),
+          const SnackBar(
+            content: Text('Score saved successfully!'),
+            backgroundColor: Colors.green,
+          ),
         );
       }
     } catch (e) {

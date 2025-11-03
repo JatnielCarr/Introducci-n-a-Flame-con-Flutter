@@ -38,9 +38,12 @@ Re-implementación del clásico juego Breakout de Steve Wozniak, con gráficos m
 ### ☁️ Integración con Supabase
 - ✅ Backend en la nube
 - ✅ Base de datos PostgreSQL
-- ✅ Almacenamiento de puntuaciones
+- ✅ Almacenamiento inteligente de puntuaciones
+- ✅ Solo guarda si superas tu mejor score
 - ✅ Consultas en tiempo real
 - ✅ Row Level Security (RLS)
+- ✅ Top 5 mejores puntuaciones
+- ✅ Ordenamiento justo (más reciente gana en empate)
 
 ## 🎮 Controles
 
@@ -110,6 +113,11 @@ flutter pub get
    static const String supabaseAnonKey = 'TU_ANON_KEY';
    ```
 
+   **Ubicación de credenciales en Supabase:**
+   - Ve a: Project Settings → API
+   - **Project URL**: En la sección "Configuration"
+   - **anon/public key**: En la sección "Project API keys"
+
 4. **Ejecutar la aplicación**
 ```bash
 flutter run
@@ -177,7 +185,61 @@ lib/
 - ✅ Las API keys se pueden exponer de forma segura (solo con RLS)
 - ⚠️ **Importante**: En producción, considera usar variables de entorno
 
-## 🌍 Plataformas Soportadas
+## � Personalización de Iconos y Splash Screen
+
+### Iconos de la Aplicación
+
+El proyecto incluye iconos personalizados para todas las plataformas usando `flutter_launcher_icons`.
+
+**Configuración en `pubspec.yaml`:**
+```yaml
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/icon.png"
+  remove_alpha_ios: true
+  web:
+    generate: true
+    image_path: "assets/images/icon.png"
+  windows:
+    generate: true
+    image_path: "assets/images/icon.png"
+  macos:
+    generate: true
+    image_path: "assets/images/icon.png"
+```
+
+**Para actualizar los iconos:**
+1. Reemplaza `assets/images/icon.png` con tu imagen (mínimo 1024x1024px)
+2. Ejecuta: `dart run flutter_launcher_icons`
+
+### Splash Screen
+
+Pantalla de carga personalizada con color de fondo `#f2e8cf` (beige) usando `flutter_native_splash`.
+
+**Configuración en `pubspec.yaml`:**
+```yaml
+flutter_native_splash:
+  color: "#f2e8cf"
+  image: assets/images/icon.png
+  android_12:
+    color: "#f2e8cf"
+    image: assets/images/icon.png
+  web: true
+  android: true
+  ios: true
+```
+
+**Para actualizar el splash:**
+1. Modifica el color o imagen en `pubspec.yaml`
+2. Ejecuta: `dart run flutter_native_splash:create`
+
+**Plataformas generadas:**
+- ✅ Android (incluye soporte Android 12+)
+- ✅ iOS (launch images)
+- ✅ Web (con CSS personalizado)
+
+## �🌍 Plataformas Soportadas
 
 - ✅ Windows
 - ✅ macOS
@@ -210,6 +272,36 @@ Las contribuciones son bienvenidas. Por favor:
 - [Documentación de Flame](https://docs.flame-engine.org/)
 - [Documentación de Supabase](https://supabase.com/docs)
 - [Codelab Original](https://codelabs.developers.google.com/codelabs/flutter-flame-brick-breaker)
+- [Flutter Launcher Icons](https://pub.dev/packages/flutter_launcher_icons)
+- [Flutter Native Splash](https://pub.dev/packages/flutter_native_splash)
+
+## ⚙️ Comandos Útiles
+
+```bash
+# Instalar dependencias
+flutter pub get
+
+# Ejecutar en modo debug
+flutter run
+
+# Ejecutar en modo release
+flutter run --release
+
+# Generar iconos
+dart run flutter_launcher_icons
+
+# Generar splash screens
+dart run flutter_native_splash:create
+
+# Limpiar build
+flutter clean
+
+# Verificar código
+flutter analyze
+
+# Formatear código
+dart format .
+```
 
 ## 🐛 Reportar Bugs
 
